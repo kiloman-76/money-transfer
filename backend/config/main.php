@@ -10,7 +10,8 @@ return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log',
+                    'common\bootstrap\SetUp',],
     'modules' => [],
     'components' => [
         'request' => [
@@ -18,7 +19,7 @@ return [
             'cookieValidationKey' => $params['cookieValidationKey'],
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'src\entities\user\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-money-transfer', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
 

@@ -1,5 +1,5 @@
 <?php
-namespace common\models;
+namespace src\entities\user;
 
 use Yii;
 use yii\base\NotSupportedException;
@@ -24,6 +24,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
+    const STATUS_NOT_ACTIVE = 3;
     const STATUS_ACTIVE = 10;
 
 
@@ -32,7 +33,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function tableName()
     {
-        return '{{%user}}';
+        return '{{%users}}';
     }
 
     /**
@@ -43,6 +44,19 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             TimestampBehavior::className(),
         ];
+    }
+
+    public static function signup(string $username, string $email, string $password): self
+    {
+        $user = new self();
+        $user->username = $username;
+        $user->email = $email;
+        $user->setPassword($password);
+        $user->created_at = time();
+        $user->status = self::STATUS_ACTIVE;
+        $user->generateAuthKey();
+        return $user;
+
     }
 
     /**
@@ -161,6 +175,31 @@ class User extends ActiveRecord implements IdentityInterface
     public function setPassword($password)
     {
         $this->password_hash = Yii::$app->security->generatePasswordHash($password);
+    }
+
+    public function requestPasswordReset(): void
+    {
+        if(!empty($this->password_reset_token) && self::isPasswordResetTokenValid($this->password_reset_token))
+        {
+            throw new \DomainException('Password resetting is already requested.');
+        }
+
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
+     *
+     * Reset password
+     *
+     * @param string $password
+     */
+    public function resetPassword(string $password)
+    {
+        if (empty($this->password_reset_token)) {
+            throw new \DomainException('Password reset is not requested.');
+        }
+        $this->setPassword($password);
+        $this->password_reset_token = null;
     }
 
     /**

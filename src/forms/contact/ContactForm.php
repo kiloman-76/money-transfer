@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace src\forms\contact;
 
 use Yii;
 use yii\base\Model;

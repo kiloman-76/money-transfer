@@ -7,17 +7,36 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
+use src\forms\auth\LoginForm;
+use src\forms\auth\PasswordResetRequestForm;
+use src\forms\auth\ResetPasswordForm;
+use src\forms\auth\SignupForm;
+use src\forms\contact\ContactForm;
+use src\services\SignupService;
+use src\services\PasswordResetService;
 
 /**
  * Site controller
  */
 class SiteController extends Controller
 {
+
+    private $passwordResetService;
+
+    /**
+     * SiteController constructor.
+     * @param string $id
+     * @param \yii\base\Module $module
+     * @param PasswordResetService $passwordResetService идет автозагрузка из контейнера внедрения зависимостями
+     * @param array $config
+     */
+    public function __construct($id, $module, PasswordResetService $passwordResetService, $config = [])
+    {
+        parent::__construct($id, $module, $config);
+        $this->passwordResetService = $passwordResetService;
+    }
+
+
     /**
      * @inheritdoc
      */
@@ -150,17 +169,19 @@ class SiteController extends Controller
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post())) {
-            if ($user = $model->signup()) {
-                if (Yii::$app->getUser()->login($user)) {
-                    return $this->goHome();
-                }
+        $form = new SignupForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+
+            $user = (new SignupService())->signup($form);
+
+            if (Yii::$app->getUser()->login($user)) {
+                return $this->goHome();
             }
+
         }
 
         return $this->render('signup', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
@@ -171,9 +192,9 @@ class SiteController extends Controller
      */
     public function actionRequestPasswordReset()
     {
-        $model = new PasswordResetRequestForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail()) {
+        $form = new PasswordResetRequestForm();
+        if ($form->load(Yii::$app->request->post()) && $form->validate()) {
+            if ($this->passwordResetService->sendEmail()) {
                 Yii::$app->session->setFlash('success', 'Check your email for further instructions.');
 
                 return $this->goHome();
@@ -183,7 +204,7 @@ class SiteController extends Controller
         }
 
         return $this->render('requestPasswordResetToken', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 
@@ -196,20 +217,30 @@ class SiteController extends Controller
      */
     public function actionResetPassword($token)
     {
+
         try {
-            $model = new ResetPasswordForm($token);
-        } catch (InvalidParamException $e) {
+            $this->passwordResetService->validateToken($token);
+        }
+        catch (\DomainException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->session->setFlash('success', 'New password saved.');
+        $form = new ResetPasswordForm();
 
-            return $this->goHome();
+        if ($form->load(Yii::$app->request->post()) && $form->validate())
+        {
+            try {
+                $service->reset($token, $form);
+                Yii::$app->session->setFlash('success', 'New password saved.');
+
+            } catch (\DomainException $e) {
+                Yii::$app->errorHandler->logException($e);
+                Yii::$app->session->setFlash('error', $e->getMessage());
+            }
         }
 
         return $this->render('resetPassword', [
-            'model' => $model,
+            'model' => $form,
         ]);
     }
 }
