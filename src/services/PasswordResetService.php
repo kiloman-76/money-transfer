@@ -23,7 +23,7 @@ class PasswordResetService
     {
         /* @var $user User */
         $user = User::findOne([
-            'status' => User::STATUS_ACTIVE,
+            'status' => [User::STATUS_ACTIVE, User::STATUS_NOT_ACTIVE],
             'email' => $form->email,
         ]);
 
@@ -50,7 +50,7 @@ class PasswordResetService
             ->send();
         if (!$sent)
         {
-            throw new \RuntimeException('Sending error/].');
+            throw new \RuntimeException('Sending error.');
         }
     }
 

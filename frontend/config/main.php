@@ -18,7 +18,7 @@ return [
             'cookieValidationKey' => $params['cookieValidationKey'],
         ],
         'user' => [
-            'identityClass' => 'User',
+            'identityClass' => 'src\entities\user\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-money-transfer', 'httpOnly' => true, 'domain' => $params['cookieDomain']],
         ],
