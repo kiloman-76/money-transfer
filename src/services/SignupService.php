@@ -30,6 +30,17 @@ class SignupService
 
     public function sendEmail(User $user)
     {
+        if (!$user) {
+            throw new \DomainException('User is not found.');
+        }
+
+        $user->generatePasswordResetToken();
+
+        if (!$user->save())
+        {
+            throw new \RuntimeException('Saving error.');
+        }
+
         $sent = Yii::$app
             ->mailer
             ->compose(

@@ -7,7 +7,7 @@ github_token: 51fb61844029ee8829c17360a88a1061c21a9f9a
 timezone: Asia/Novosibirsk
 
 # Are we need check box updates for every 'vagrant up'?
-box_check_update: false
+box_check_update: true
 
 # Virtual machine name
 machine_name: money-transfer

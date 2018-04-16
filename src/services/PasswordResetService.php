@@ -54,6 +54,8 @@ class PasswordResetService
         }
     }
 
+
+
     public function validateToken($token): void
     {
         if (empty($token) || !is_string($token))

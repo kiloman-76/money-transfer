@@ -7,8 +7,8 @@ required_plugins.each do |plugin|
 end
 
 domains = {
-  frontend: 'money-transfer.dev',
-  backend:  'admin.money-transfer.dev'
+  frontend: 'money-transfer.test',
+  backend:  'admin.money-transfer.test'
 }
 
 config = {

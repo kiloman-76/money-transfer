@@ -29,6 +29,7 @@ class SiteController extends Controller
      * @param string $id
      * @param \yii\base\Module $module
      * @param PasswordResetService $passwordResetService идет автозагрузка из контейнера внедрения зависимостями
+     * @param SignupService $signupService
      * @param array $config
      */
     public function __construct($id, $module,
@@ -110,10 +111,10 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            $model->password = '';
 
             return $this->render('login', [
                 'model' => $model,
