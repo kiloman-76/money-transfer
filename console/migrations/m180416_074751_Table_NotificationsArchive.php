@@ -14,9 +14,9 @@ class m180416_074751_Table_NotificationsArchive extends Migration
     {
         $sql = 'CREATE TABLE "NotificationsArchive"(
                 CHECK ( nt_read = TRUE )
-                CHECK ( nt_view > 0 )
+                --CHECK ( nt_view > 0 )
                 ) 
-                INHERITS ("NotificationsActual")';
+                INHERITS ("NotificationsActual");';
         //Yii::$app->db->createCommand($sql)->execute();
 
         $this->execute($sql);
