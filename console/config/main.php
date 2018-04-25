@@ -20,6 +20,9 @@ return [
             'class' => 'yii\console\controllers\FixtureController',
             'namespace' => 'common\fixtures',
           ],
+        'hello' => [
+            'class' => 'yii\console\controllers\HellowController',
+        ],
     ],
     'components' => [
         'log' => [

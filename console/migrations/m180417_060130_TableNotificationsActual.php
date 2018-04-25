@@ -14,7 +14,7 @@ class m180417_060130_TableNotificationsActual extends Migration
     {
         $sql = 'CREATE TABLE "NotificationsActual" (
                 CHECK ( nt_read = FALSE )
-                ) INHERITS ("Notifications")';
+                ) INHERITS ("NotificationsMain")';
 
         $this->execute($sql);
     }
@@ -25,24 +25,5 @@ class m180417_060130_TableNotificationsActual extends Migration
     public function safeDown()
     {
         $this->dropTable('{{%NotificationsActual}}');
-
-        echo "m180417_060130_TableNotificationsActual cannot be reverted.\n";
-
-        return false;
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m180417_060130_TableNotificationsActual cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }

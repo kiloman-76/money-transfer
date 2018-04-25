@@ -12,7 +12,7 @@ class m180417_054054_TableNotifications extends Migration
      */
     public function safeUp()
     {
-        $sql = 'CREATE TABLE "Notifications" (
+        $sql = 'CREATE TABLE "NotificationsMain" (
                 nt_id bigint NOT NULL,
                 nt_type smallint,
                 nt_data jsonb,
@@ -22,25 +22,18 @@ class m180417_054054_TableNotifications extends Migration
                 nt_text text,
                 nt_view integer DEFAULT 0,
                 nt_identical integer);
-                
-                ALTER TABLE "Notifications" OWNER TO yii2_db;';
-
-        Yii::$app->db->createCommand($sql)->queryAll();
-        //$this->execute($sql);
-
-        $sql = ''; // не выполнится если нет нужного пользователя
+                ';
 
         $this->execute($sql);
+        $this->execute('ALTER TABLE "NotificationsMain" OWNER TO yii2_db;');
 
-        $sql = 'COMMENT ON TABLE "Notifications" IS \'Таблица, содержащая уведомления пользователей\';
-                COMMENT ON COLUMN "Notifications".nt_type IS \'Типы увдедомлений . Хранятся в params\';
-                COMMENT ON COLUMN "Notifications".nt_data IS \'Параметры увдомления\';
-                COMMENT ON COLUMN "Notifications".nt_date IS \'Дата создания уведомления\';
-                COMMENT ON COLUMN "Notifications".nt_user_id IS \'Получатель уведомления\';
-                COMMENT ON COLUMN "Notifications".nt_view IS \'Вид уведомления\';
-                COMMENT ON COLUMN "Notifications".nt_identical IS \'Идентичные уведомления\';';
-
-        $this->execute($sql);
+        $this->execute('COMMENT ON TABLE "NotificationsMain" IS \'Таблица, содержащая уведомления пользователей\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_type IS \'Типы увдедомлений . Хранятся в params\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_data IS \'Параметры увдомления\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_date IS \'Дата создания уведомления\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_user_id IS \'Получатель уведомления\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_view IS \'Вид уведомления\'');
+        $this->execute('COMMENT ON COLUMN "NotificationsMain".nt_identical IS \'Идентичные уведомления\'');
     }
 
     /**
@@ -48,25 +41,6 @@ class m180417_054054_TableNotifications extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%Notifications}}');
-
-        echo "m180417_054054_TableNotifications cannot be reverted.\n";
-
-        return false;
+        $this->dropTable('{{%NotificationsMain}}');
     }
-
-    /*
-    // Use up()/down() to run migration code without a transaction.
-    public function up()
-    {
-
-    }
-
-    public function down()
-    {
-        echo "m180417_054054_TableNotifications cannot be reverted.\n";
-
-        return false;
-    }
-    */
 }
