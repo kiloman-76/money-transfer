@@ -13,7 +13,7 @@ class m180417_060130_TableNotificationsActual extends Migration
     public function safeUp()
     {
         $sql = 'CREATE TABLE "NotificationsActual" (
-                CHECK ( nt_read == FALSE )
+                CHECK ( nt_read = FALSE )
                 ) INHERITS ("NotificationsMain")';
 
         $this->execute($sql);
