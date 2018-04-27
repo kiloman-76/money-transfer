@@ -13,7 +13,7 @@ class m180417_060153_TableNotificationsArchive extends Migration
     public function safeUp()
     {
         $sql = 'CREATE TABLE "NotificationsArchive" (
-                CHECK ( nt_read = TRUE ),
+                CHECK ( nt_read == TRUE ),
                 CHECK ( nt_view > 0 )
                 ) INHERITS ("NotificationsMain")';
 

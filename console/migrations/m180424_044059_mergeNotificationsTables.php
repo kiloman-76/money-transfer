@@ -12,8 +12,8 @@ class m180424_044059_mergeNotificationsTables extends Migration
      */
     public function safeUp()
     {
-        $list_table = $this->execute('SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name LIKE \'Notifications_user%\' ORDER BY table_name ASC;');
-        echo $list_table;
+        //$list_table = $this->execute('SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_name LIKE \'Notifications_user%\' ORDER BY table_name ASC;');
+        //echo $list_table;
     }
 
     /**
@@ -22,6 +22,7 @@ class m180424_044059_mergeNotificationsTables extends Migration
     public function safeDown()
     {
         echo "m180424_044059_mergeNotificationsTables cannot be reverted.\n";
+
 
         return false;
     }

@@ -20,6 +20,7 @@ class m180417_054054_TableNotifications extends Migration
                 nt_user_id integer,
                 nt_read boolean DEFAULT false NOT NULL,
                 nt_text text,
+                nt_is_push boolean DEFAULT false NOT NULL,
                 nt_view integer DEFAULT 0,
                 nt_identical integer);
                 ';
